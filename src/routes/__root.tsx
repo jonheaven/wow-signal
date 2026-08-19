@@ -8,8 +8,9 @@ import { Shell } from "@/components/shell";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "WOW SIGNAL";
-const host = import.meta.env.VITE_PUBLIC_HOSTNAME;
-const ogImage = host ? `https://${host}/og.jpg` : undefined;
+const CANONICAL_HOST = "wow.dogenals.com";
+const host = import.meta.env.VITE_PUBLIC_HOSTNAME || CANONICAL_HOST;
+const ogImage = `https://${host}/og.jpg`;
 
 export const Route = createRootRoute({
   head: () => ({
@@ -32,15 +33,13 @@ export const Route = createRootRoute({
           "Humanity's first guestbook. Written on Dogecoin. Aimed at Mars.",
       },
       { property: "og:type", content: "website" },
-      ...(ogImage
-        ? [
-            { property: "og:image", content: ogImage },
-            { property: "og:image:width", content: "1200" },
-            { property: "og:image:height", content: "630" },
-          ]
-        : []),
+      { property: "og:url", content: `https://${CANONICAL_HOST}/` },
+      { property: "og:image", content: ogImage },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
     ],
     links: [
+      { rel: "canonical", href: `https://${CANONICAL_HOST}/` },
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/__grok/manifest.webmanifest" },

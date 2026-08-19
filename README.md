@@ -2,6 +2,8 @@
 
 **Humanity's first guestbook. Written on Dogecoin. Aimed at Mars.**
 
+**Live:** [wow.dogenals.com](https://wow.dogenals.com)
+
 Every transmission is a Dogenal — permanent, public, cheap enough for anyone.
 
 Consumer app for the [`Ð:WOW`](https://github.com/jonheaven/dogenals/tree/main/spec/protocols/wow) protocol. Compose a 280-character message, optional ÐVow, sign with X / Ð𝕏. Production settles through the stack you already run:
