@@ -123,16 +123,19 @@ function authPopupPlugin(): Plugin {
   };
 }
 
-// `0.0.0.0:8080` is the live-preview contract — don't change host/port.
-// Keep `nitro` gated to `build` (the Vercel deploy target): enabled in dev it
-// opens a second dev-server port, which breaks the single-port preview.
-// The dev server starts once `src/router.tsx` and `src/routes/` exist — see
-// AGENTS.md § "First scaffold".
+// Default `0.0.0.0:8080` is the Grok live-preview contract.
+// `dogenals launch` sets PORT=3083 (dogex already owns :8080) and
+// DOGENALS_TUNNEL_HMR=1 so wow.dogenals.com HMR works through the tunnel.
+const port = Number(process.env.PORT || 8080);
+const tunnelHmr = process.env.DOGENALS_TUNNEL_HMR === "1";
+
 export default defineConfig(({ command }) => ({
   server: {
     host: "0.0.0.0",
-    port: 8080,
+    port,
     strictPort: true,
+    allowedHosts: ["wow.dogenals.com", ".dogenals.com", "localhost"],
+    hmr: tunnelHmr ? { protocol: "wss", clientPort: 443 } : true,
   },
   resolve: { tsconfigPaths: true },
   plugins: [
@@ -143,6 +146,8 @@ export default defineConfig(({ command }) => ({
     grokPwaPlugin(),
     tailwindcss(),
     tanstackStart(),
+    // Keep `nitro` gated to `build` (the Vercel deploy target): enabled in dev it
+    // opens a second dev-server port, which breaks the single-port preview.
     ...(command === "build"
       ? [
           nitro({

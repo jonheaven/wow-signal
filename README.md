@@ -55,7 +55,9 @@ cp .env.example .env
 npm run dev
 ```
 
-Dev server: `http://localhost:8080`.
+Dev server: `http://localhost:8080` (`npm run dev`).
+
+On the Dogenals stack, `dogenals launch` starts this app on **`:3083`** → **[wow.dogenals.com](https://wow.dogenals.com)** (dogex already owns `:8080`). Skip with `DOGENALS_SKIP_WOW=1`. First-time DNS: `dogenals provision`.
 
 | Script | What |
 | --- | --- |
