@@ -137,7 +137,7 @@ export function StackPage() {
       </div>
 
       <div>
-        <h2 className="font-display text-2xl tracking-tight">Spec to add</h2>
+        <h2 className="font-display text-2xl tracking-tight">Envelope</h2>
         <pre className="mt-4 overflow-x-auto border border-border bg-bg p-4 text-[11px] leading-relaxed text-paper">
 {`{
   "p": "Ð:WOW",

@@ -75,10 +75,10 @@ function TransmitPage() {
         <p className="text-[11px] uppercase tracking-[0.24em] text-gold">Compose</p>
         <h1 className="mt-2 font-display text-4xl tracking-tight">Transmit</h1>
         <p className="mt-2 text-sm text-muted">
-          Callsign {callsign(handle)}. This preview writes the envelope to the
-          demo ledger. Production queues{" "}
-          <span className="text-fg">command.dog /v1/inscribe-jobs</span> and
-          dogex indexes the confirmed inscription.
+          Callsign {callsign(handle)}. Queues the envelope on{" "}
+          <span className="text-fg">command.dog /v1/wow</span>. Postage and
+          commit–reveal still go through inscribe-jobs; dogex indexes the
+          confirmed inscription.
         </p>
 
         <form onSubmit={onSubmit} className="mt-8 space-y-6">

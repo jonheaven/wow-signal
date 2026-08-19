@@ -25,8 +25,9 @@ function WallPage() {
           <p className="text-[11px] uppercase tracking-[0.24em] text-gold">Guestbook</p>
           <h1 className="mt-2 font-display text-4xl tracking-tight">The wall</h1>
           <p className="mt-2 max-w-xl text-sm text-muted">
-            Every queued and seeded transmission. Production confirms these on
-            Dogecoin via command.dog jobs and dogex index.
+            Every queued and confirmed transmission. Confirmed rows come from
+            dogex via command.dog. Pending jobs sit on command.dog until the
+            inscription confirms.
           </p>
         </div>
         <Link

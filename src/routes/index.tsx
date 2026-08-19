@@ -72,12 +72,12 @@ function BeaconPage() {
                   ? tip.data.height.toLocaleString()
                   : "—"
               }
-              hint={tip.data?.source === "blockcypher" ? "live" : "est."}
+              hint={tip.data?.source === "live" ? "dogex" : "est."}
             />
             <Hud
               label="Transmissions"
               value={stats.data ? String(stats.data.total) : "—"}
-              hint="demo + seed"
+              hint="dogex + queue"
             />
             <Hud
               label="Aimed at Mars"
@@ -87,7 +87,7 @@ function BeaconPage() {
             <Hud
               label="Wow energy"
               value={stats.data ? stats.data.energy.toLocaleString() : "—"}
-              hint="ÐPulse"
+              hint="claps"
             />
           </div>
 

@@ -45,7 +45,7 @@ Normative rules: [dogenals/spec/protocols/wow](https://github.com/jonheaven/doge
 4. Mempool — WatchDoge WS flashes the raw tx.
 5. Confirm — dogex indexes `p: Ð:WOW`. The wall reads dogex.
 
-The preview in this repo uses a local demo ledger so the product is playable without a wallet. Production deletes that ledger.
+The preview in this repo used a local demo ledger so the product was playable without a wallet. **Production wall / stats / tip / queue / briefing talk to command.dog** (`/v1/wow/*`). command.dog reads confirmed `p:"Ð:WOW"` from **dogex** `/api/wow/*`. Auth sessions still use PGLite (or `DATABASE_URL`) on this app.
 
 ## Local
 
@@ -67,7 +67,7 @@ On the Dogenals stack, `dogenals launch` starts this app on **`:3083`** → **[w
 
 ### Env
 
-See [.env.example](.env.example). Auth federates through the Grok broker (`GROK_AUTH_ISSUER`) for X / Google. `XAI_API_KEY` is optional (mission briefing). `DATABASE_URL` is optional (defaults to embedded PGLite).
+See [.env.example](.env.example). Auth federates through the Grok broker (`GROK_AUTH_ISSUER`) for X / Google. `COMMAND_DOG_API_URL` (default `http://127.0.0.1:3000`) is the product backend. Grok briefing uses command.dog's `XAI_API_KEY`. `DATABASE_URL` is optional (defaults to embedded PGLite for **auth only**).
 
 ## Product surface
 
