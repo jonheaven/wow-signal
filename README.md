@@ -57,7 +57,13 @@ npm run dev
 
 Dev server: `http://localhost:8080` (`npm run dev`).
 
-On the Dogenals stack, `dogenals launch` starts this app on **`:3083`** → **[wow.dogenals.com](https://wow.dogenals.com)** (dogex already owns `:8080`). Skip with `DOGENALS_SKIP_WOW=1`. First-time DNS: `dogenals provision`.
+On the Dogenals stack, `dogenals launch` starts this app on **`:3083`**. Public **[wow.dogenals.com](https://wow.dogenals.com)** needs a Cloudflare CNAME on the **dogenals.com** zone (cert.pem cannot write that zone):
+
+| Type | Name | Content | Proxy |
+| --- | --- | --- | --- |
+| CNAME | `wow` | `33c26e6b-d4d0-413d-a1ce-164b514538cd.cfargotunnel.com` | Proxied |
+
+Skip the app with `DOGENALS_SKIP_WOW=1`. Local: `http://127.0.0.1:3083`.
 
 | Script | What |
 | --- | --- |
