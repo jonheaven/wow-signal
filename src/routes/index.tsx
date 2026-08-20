@@ -5,22 +5,36 @@ import { BeaconCanvas } from "@/components/beacon-canvas";
 import { DEST_META } from "@/lib/protocol";
 import { getChainTip, getStats, listTransmissions } from "@/lib/signals";
 
-export const Route = createFileRoute("/")({ component: BeaconPage });
+export const Route = createFileRoute("/")({
+  loader: async () => {
+    const [list, stats, tip] = await Promise.all([
+      listTransmissions({ data: { limit: 24 } }).catch(() => []),
+      getStats().catch(() => ({ total: 0, mars: 0, energy: 0 })),
+      getChainTip(),
+    ]);
+    return { list, stats, tip };
+  },
+  component: BeaconPage,
+});
 
 function BeaconPage() {
+  const initial = Route.useLoaderData();
   const signals = useQuery({
     queryKey: ["signals"],
     queryFn: () => listTransmissions({ data: { limit: 24 } }),
+    initialData: initial.list,
     refetchInterval: 8000,
   });
   const stats = useQuery({
     queryKey: ["stats"],
     queryFn: () => getStats(),
+    initialData: initial.stats,
     refetchInterval: 8000,
   });
   const tip = useQuery({
     queryKey: ["tip"],
     queryFn: () => getChainTip(),
+    initialData: initial.tip,
     staleTime: 30_000,
   });
 
@@ -72,7 +86,11 @@ function BeaconPage() {
                   ? tip.data.height.toLocaleString()
                   : "—"
               }
-              hint={tip.data?.source === "live" ? "dogex" : "est."}
+              hint={
+                !tip.data || tip.data.source === "estimate"
+                  ? "est."
+                  : "dogex"
+              }
             />
             <Hud
               label="Transmissions"
@@ -87,7 +105,7 @@ function BeaconPage() {
             <Hud
               label="Wow energy"
               value={stats.data ? stats.data.energy.toLocaleString() : "—"}
-              hint="claps"
+              hint="wows"
             />
           </div>
 

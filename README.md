@@ -65,9 +65,24 @@ On the Dogenals stack, `dogenals launch` starts this app on **`:3083`**. Public 
 
 Skip the app with `DOGENALS_SKIP_WOW=1`. Local: `http://127.0.0.1:3083`.
 
+**Do not serve `vite dev` on the public host.** After `git pull`:
+
+```bash
+npm install
+npm run build
+PORT=3083 npm start
+```
+
+`npm start` is `vite preview` on `PORT` (default 8080; `dogenals launch` uses 3083). Cloudflare on `wow.dogenals.com`:
+
+1. SSL/TLS mode **Full** (tunnel origin is HTTP).
+2. **Always Use HTTPS** (SSL/TLS → Edge Certificates).
+3. Keep the CNAME **Proxied**.
+
 | Script | What |
 | --- | --- |
-| `npm run dev` | Vite + PGLite |
+| `npm run dev` | Vite + PGLite (auth) — local only |
+| `npm start` | Production preview (`vite preview`) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run build` | Production build + migrate |
 

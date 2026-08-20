@@ -46,6 +46,10 @@ async function commandDog<T>(
   return json as T;
 }
 
+function sumWows(rows: Transmission[]): number {
+  return rows.reduce((n, s) => n + (Number(s.wows) || 0), 0);
+}
+
 export const listTransmissions = createServerFn({ method: "GET" })
   .validator((input?: { dest?: string; limit?: number }) => input ?? {})
   .handler(async ({ data }) => {
@@ -71,9 +75,21 @@ export const getTransmission = createServerFn({ method: "GET" })
   });
 
 export const getStats = createServerFn({ method: "GET" }).handler(async () => {
-  return commandDog<{ total: number; mars: number; energy: number }>(
-    "/v1/wow/stats",
-  );
+  const stats = await commandDog<{
+    total: number;
+    mars: number;
+    energy: number;
+  }>("/v1/wow/stats");
+  // command.dog stats() used to sum only the in-memory wow HashMap, so seed
+  // rows (Kabosu 42069, …) reported energy 0. Prefer the API; fall back to
+  // the wall's `wows` fields when energy is still empty.
+  if ((stats.energy ?? 0) > 0) return stats;
+  try {
+    const wall = await commandDog<Transmission[]>("/v1/wow/wall?limit=80");
+    return { ...stats, energy: sumWows(wall) };
+  } catch {
+    return stats;
+  }
 });
 
 export const listMine = createServerFn({ method: "GET" })

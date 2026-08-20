@@ -6,9 +6,18 @@ import { SignalCard } from "@/components/signal-card";
 import { DESTINATIONS, DEST_META, type Destination } from "@/lib/protocol";
 import { listTransmissions } from "@/lib/signals";
 
-export const Route = createFileRoute("/wall")({ component: WallPage });
+export const Route = createFileRoute("/wall")({
+  loader: async () => {
+    const list = await listTransmissions({ data: { limit: 60 } }).catch(
+      () => [],
+    );
+    return { list };
+  },
+  component: WallPage,
+});
 
 function WallPage() {
+  const initial = Route.useLoaderData();
   const [dest, setDest] = useState<Destination | "all">("all");
   const q = useQuery({
     queryKey: ["signals", dest],
@@ -16,6 +25,7 @@ function WallPage() {
       listTransmissions({
         data: dest === "all" ? { limit: 60 } : { dest, limit: 60 },
       }),
+    initialData: dest === "all" ? initial.list : undefined,
   });
 
   return (

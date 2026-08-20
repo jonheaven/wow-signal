@@ -137,6 +137,12 @@ export default defineConfig(({ command }) => ({
     allowedHosts: ["wow.dogenals.com", ".dogenals.com", "localhost"],
     hmr: tunnelHmr ? { protocol: "wss", clientPort: 443 } : true,
   },
+  preview: {
+    host: "0.0.0.0",
+    port,
+    strictPort: true,
+    allowedHosts: ["wow.dogenals.com", ".dogenals.com", "localhost"],
+  },
   resolve: { tsconfigPaths: true },
   plugins: [
     pgliteBootstrapPlugin(),

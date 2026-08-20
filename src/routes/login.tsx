@@ -1,16 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { GROK_PROVIDERS, authEnabled, signIn } from "@/lib/auth/client";
+import { hasDraftMessage } from "@/lib/draft";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/login")({ component: LoginPage });
 
 function LoginPage() {
+  const [draftWaiting, setDraftWaiting] = useState(false);
+  useEffect(() => {
+    setDraftWaiting(hasDraftMessage());
+  }, []);
+
   return (
     <div className="mx-auto max-w-md py-10">
       <p className="text-[11px] uppercase tracking-[0.24em] text-gold">Access</p>
       <h1 className="mt-2 font-display text-4xl tracking-tight">Sign in</h1>
       <p className="mt-3 text-sm text-muted">
-        X is the native identity for Ð𝕏. Google works too. Your handle becomes
-        the callsign on the envelope.
+        {draftWaiting
+          ? "Your transmission is waiting. Sign in and we queue it."
+          : "X is the native identity for Ð𝕏. Google works too. Your handle becomes the callsign on the envelope."}
       </p>
 
       <div className="mt-8 space-y-3">
@@ -32,8 +40,8 @@ function LoginPage() {
         )}
       </div>
 
-      <Link to="/" className="mt-8 inline-block text-xs uppercase tracking-[0.16em] text-faint hover:text-muted">
-        Back to beacon
+      <Link to="/transmit" className="mt-8 inline-block text-xs uppercase tracking-[0.16em] text-faint hover:text-muted">
+        {draftWaiting ? "Back to draft" : "Write first, sign in later"}
       </Link>
     </div>
   );
