@@ -1,22 +1,31 @@
 # WOW SIGNAL
 
-**Humanity's first guestbook. Written on Dogecoin. Aimed at Mars.**
+**Earth's outbound log. Addressed to Mars. Postage paid.**
 
 **Live:** [wow.dogenals.com](https://wow.dogenals.com)
 
-Every transmission is a Dogenal — permanent, public, cheap enough for anyone.
+No wallet. Sign in with X or Google. Hold to stamp. The Dogenals postage pot inscribes your words on Dogecoin.
 
-Consumer app for the [`Ð:WOW`](https://github.com/jonheaven/dogenals/tree/main/spec/protocols/wow) protocol. Compose a 280-character message, optional ÐVow, sign with X / Ð𝕏. Production settles through the stack you already run:
+Consumer app for the [`Ð:WOW`](https://github.com/jonheaven/dogenals/tree/main/spec/protocols/wow) protocol. Production settles through the stack you already run:
 
 | Layer | Job |
 | --- | --- |
 | [dogenals](https://github.com/jonheaven/dogenals) | Protocol standard. Envelope, marker `dog`. |
-| [command.dog](https://github.com/jonheaven/command.dog) | Inscribe jobs, Grok briefing, Ðoge𝕏ID, WatchDoge WS, Ðrok proxy. |
+| [command.dog](https://github.com/jonheaven/command.dog) | Sponsored inscribe jobs, Grok briefing, WatchDoge WS. |
+| Treasury Dojak | Operator wallet signs postage. Users never hold a key. |
 | [dogex](https://github.com/jonheaven/dogex) | Index confirmed `p: "Ð:WOW"`. Proofs. Broadcast. |
-| [Ðrok](https://github.com/jonheaven/drok.lol) | Optional mission patch from a Collection Constitution (Grok Imagine). |
-| Dojak / Wizard / Scrypto | User signs. Keys stay with the dog. |
+| [WatchDoge](https://github.com/jonheaven/watchdoge) | Mempool flash + inbound donation UTXOs. |
+| [Ðrok](https://github.com/jonheaven/drok.lol) | Optional paid mission patch. Not required. |
 
 This repo is the **public square**. It is not a second indexer.
+
+## Product contract
+
+- Identity = X or Google. Callsign from the handle.
+- Postage = community pot. Writers pay 0 Ð. If the pot runs dry, the faucet pauses.
+- Quota = one free signal per Earth day.
+- Stamp = hold-to-send + signed challenge. Not a captcha page.
+- Overflow = more of the mission, in public. Not a slush fund.
 
 ## Envelope
 
@@ -39,13 +48,14 @@ Normative rules: [dogenals/spec/protocols/wow](https://github.com/jonheaven/doge
 
 ## Settlement path
 
-1. Compose — identity from Ð𝕏 / X sign-in.
-2. Queue — `command.dog /v1/inscribe-jobs` quotes postage.
-3. Sign — Dojak (or Wizard / Scrypto). command.dog never holds the key.
-4. Mempool — WatchDoge WS flashes the raw tx.
-5. Confirm — dogex indexes `p: Ð:WOW`. The wall reads dogex.
+1. Compose — identity from X / Google. No wallet.
+2. Stamp — hold until gold fills. Signed challenge, honeypot, quota.
+3. Sponsor — `command.dog` queues postage against the treasury.
+4. Sign — treasury Dojak. There is no user key.
+5. Mempool — WatchDoge WS flashes the raw tx.
+6. Confirm — dogex indexes `p: Ð:WOW`. The wall reads dogex.
 
-The preview in this repo used a local demo ledger so the product was playable without a wallet. **Production wall / stats / tip / queue / briefing talk to command.dog** (`/v1/wow/*`). command.dog reads confirmed `p:"Ð:WOW"` from **dogex** `/api/wow/*`. Auth sessions still use PGLite (or `DATABASE_URL`) on this app.
+**Production wall / stats / tip / queue / briefing talk to command.dog** (`/v1/wow/*`). command.dog reads confirmed `p:"Ð:WOW"` from **dogex** `/api/wow/*`. Auth sessions still use PGLite (or `DATABASE_URL`) on this app.
 
 ## Local
 
@@ -92,10 +102,11 @@ See [.env.example](.env.example). Auth federates through the Grok broker (`GROK_
 
 ## Product surface
 
-- `/` Beacon — Earth / Moon / Mars, live pulses, chain-tip HUD
-- `/transmit` — write the envelope
-- `/wall` — guestbook
+- `/` Beacon — send a message to Mars, free
+- `/transmit` — compose + hold to stamp
+- `/wall` — the book
 - `/signal/:id` — share card + briefing
+- `/mission` — postage pot, overflow rule
 - `/stack` — ownership map
 
 ## License

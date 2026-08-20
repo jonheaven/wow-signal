@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MeRouteImport } from './routes/me'
+import { Route as MissionRouteImport } from './routes/mission'
 import { Route as StackRouteImport } from './routes/stack'
 import { Route as TransmitRouteImport } from './routes/transmit'
 import { Route as WallRouteImport } from './routes/wall'
@@ -31,6 +32,11 @@ const LoginRoute = LoginRouteImport.update({
 const MeRoute = MeRouteImport.update({
   id: '/me',
   path: '/me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MissionRoute = MissionRouteImport.update({
+  id: '/mission',
+  path: '/mission',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StackRoute = StackRouteImport.update({
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/me': typeof MeRoute
+  '/mission': typeof MissionRoute
   '/stack': typeof StackRoute
   '/transmit': typeof TransmitRoute
   '/wall': typeof WallRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/me': typeof MeRoute
+  '/mission': typeof MissionRoute
   '/stack': typeof StackRoute
   '/transmit': typeof TransmitRoute
   '/wall': typeof WallRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/me': typeof MeRoute
+  '/mission': typeof MissionRoute
   '/stack': typeof StackRoute
   '/transmit': typeof TransmitRoute
   '/wall': typeof WallRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/me'
+    | '/mission'
     | '/stack'
     | '/transmit'
     | '/wall'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/me'
+    | '/mission'
     | '/stack'
     | '/transmit'
     | '/wall'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/me'
+    | '/mission'
     | '/stack'
     | '/transmit'
     | '/wall'
@@ -127,6 +139,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
   MeRoute: typeof MeRoute
+  MissionRoute: typeof MissionRoute
   StackRoute: typeof StackRoute
   TransmitRoute: typeof TransmitRoute
   WallRoute: typeof WallRoute
@@ -155,6 +168,13 @@ declare module '@tanstack/react-router' {
       path: '/me'
       fullPath: '/me'
       preLoaderRoute: typeof MeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mission': {
+      id: '/mission'
+      path: '/mission'
+      fullPath: '/mission'
+      preLoaderRoute: typeof MissionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/stack': {
@@ -199,6 +219,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
   MeRoute: MeRoute,
+  MissionRoute: MissionRoute,
   StackRoute: StackRoute,
   TransmitRoute: TransmitRoute,
   WallRoute: WallRoute,

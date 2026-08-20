@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Radio } from "lucide-react";
 import { toast } from "sonner";
 import { Envelope } from "@/components/envelope";
+import { PostageMark } from "@/components/postage";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { DEST_META, callsign } from "@/lib/protocol";
 import { briefSignal, getTransmission, wowSignal } from "@/lib/signals";
@@ -66,7 +67,8 @@ function SignalPage() {
           </p>
         ) : null}
 
-        <dl className="mt-8 grid gap-4 sm:grid-cols-2">
+        <PostageMark className="mt-6" />
+        <dl className="mt-6 grid gap-4 sm:grid-cols-2">
           <Meta k="Callsign" v={callsign(s.handle)} />
           <Meta k="From" v={`@${s.handle}`} />
           <Meta k="Destination" v={dest.label} />
@@ -114,11 +116,10 @@ function SignalPage() {
       <div>
         <Envelope envelope={s.envelope} />
         <p className="mt-4 text-xs leading-relaxed text-faint">
-          Production: command.dog queues the mint, Dojak signs, WatchDoge shows
-          the mempool flash, dogex indexes the confirmed Ð:WOW, explorer proves
-          the tx. Ðrok forges an optional mission patch from the WOW Collection
-          Constitution (Grok Imagine, prepaid in DOGE). This preview is the
-          consumer surface — not a second indexer.
+          Production: command.dog queues a sponsored mint from the Dogenals
+          treasury. Humans never sign. WatchDoge shows the mempool flash,
+          dogex indexes the confirmed Ð:WOW, explorer proves the tx. Optional
+          Ðrok patches are a paid extra — the guestbook itself stays free.
         </p>
       </div>
     </div>

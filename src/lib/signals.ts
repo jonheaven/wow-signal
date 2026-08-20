@@ -7,6 +7,7 @@ import {
   type Destination,
   type Transmission,
 } from "@/lib/protocol";
+import { TREASURY, nextQuotaAt } from "@/lib/treasury";
 
 function commandDogBase(): string {
   const raw =
@@ -92,6 +93,35 @@ export const getStats = createServerFn({ method: "GET" }).handler(async () => {
   }
 });
 
+export const getQuota = createServerFn({ method: "GET" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const qs = new URLSearchParams({ user_id: context.userId });
+    const rows = await commandDog<Transmission[]>(`/v1/wow/mine?${qs}`).catch(
+      () => [] as Transmission[],
+    );
+    const last = rows[0];
+    if (!last) {
+      return { remaining: TREASURY.dailyPerHuman, nextAt: null as string | null };
+    }
+    const next = nextQuotaAt(last.createdAt);
+    if (Date.now() >= next.getTime()) {
+      return { remaining: TREASURY.dailyPerHuman, nextAt: null as string | null };
+    }
+    return { remaining: 0, nextAt: next.toISOString() };
+  });
+
+export const getTreasuryPulse = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const stats = await getStats().catch(() => ({ total: 0 }));
+    return {
+      sponsored: Number(stats.total ?? 0),
+      address: TREASURY.address,
+      label: TREASURY.label,
+    };
+  },
+);
+
 export const listMine = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
   .handler(async ({ context }) => {
@@ -109,9 +139,14 @@ export const transmit = createServerFn({ method: "POST" })
       handle?: string;
       displayName?: string;
       avatarUrl?: string | null;
+      stamp?: string;
+      trap?: string;
     }) => input,
   )
   .handler(async ({ context, data }) => {
+    const { assertStamp } = await import("./stamp-crypto");
+    assertStamp(data.stamp, data.trap);
+
     const message = data.message.trim();
     if (!message) throw new Error("Message is empty.");
     if (message.length > MESSAGE_MAX) throw new Error("Message exceeds 280.");
@@ -120,6 +155,23 @@ export const transmit = createServerFn({ method: "POST" })
     }
     const vow = data.vow?.trim() ?? "";
     if (vow.length > VOW_MAX) throw new Error("Vow exceeds 120.");
+
+    const qs = new URLSearchParams({ user_id: context.userId });
+    const mine = await commandDog<Transmission[]>(`/v1/wow/mine?${qs}`).catch(
+      () => [] as Transmission[],
+    );
+    const last = mine[0];
+    if (last) {
+      const next = nextQuotaAt(last.createdAt);
+      if (Date.now() < next.getTime()) {
+        throw new Error(
+          `One free signal per Earth day. Next window ${next.toUTCString()}.`,
+        );
+      }
+      if (last.message.trim().toLowerCase() === message.toLowerCase()) {
+        throw new Error("That signal is already on the wall.");
+      }
+    }
 
     const handle = (data.handle || "anon")
       .replace(/^@/, "")

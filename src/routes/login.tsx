@@ -17,8 +17,8 @@ function LoginPage() {
       <h1 className="mt-2 font-display text-4xl tracking-tight">Sign in</h1>
       <p className="mt-3 text-sm text-muted">
         {draftWaiting
-          ? "Your transmission is waiting. Sign in and we queue it."
-          : "X is the native identity for Ð𝕏. Google works too. Your handle becomes the callsign on the envelope."}
+          ? "Your transmission is waiting. Sign in — we pay the Dogecoin postage and queue it. No wallet."
+          : "No Dogecoin required. X or Google is your callsign. We inscribe the message from the treasury."}
       </p>
 
       <div className="mt-8 space-y-3">

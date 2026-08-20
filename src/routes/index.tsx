@@ -50,30 +50,32 @@ function BeaconPage() {
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
           <div className="max-w-3xl">
             <p className="text-[11px] uppercase tracking-[0.28em] text-gold">
-              Mission control · Dogenals
+              Free · We pay · Dogecoin · Mars
             </p>
             <h1 className="mt-3 font-display text-5xl tracking-tight text-fg sm:text-7xl">
-              Humanity's first
+              Send a message
               <br />
-              guestbook.
+              to Mars.
+              <span className="text-gold"> Free.</span>
             </h1>
             <p className="mt-4 max-w-xl text-sm text-muted sm:text-base">
-              Written on Dogecoin. Aimed at Mars. Every transmission is a
-              Dogenal — permanent, public, cheap enough for anyone.
+              We pay the postage. You never touch a wallet. Your words get
+              inscribed on Dogecoin and aimed at the sky. Permanent. Public.
+              LFG.
             </p>
             <div className="pointer-events-auto mt-6 flex flex-wrap gap-3">
               <Link
                 to="/transmit"
                 className="inline-flex h-11 items-center gap-2 bg-gold px-5 text-[12px] font-medium uppercase tracking-[0.18em] text-bg transition-colors hover:bg-gold-hot"
               >
-                Transmit
+                Send it — 0 Ð
                 <ArrowUpRight className="size-4" />
               </Link>
               <Link
-                to="/wall"
+                to="/mission"
                 className="inline-flex h-11 items-center border border-border px-5 text-[12px] font-medium uppercase tracking-[0.18em] text-fg transition-colors hover:border-gold hover:text-gold"
               >
-                Read the wall
+                Wait, you pay?
               </Link>
             </div>
           </div>
@@ -95,7 +97,7 @@ function BeaconPage() {
             <Hud
               label="Transmissions"
               value={stats.data ? String(stats.data.total) : "—"}
-              hint="dogex + queue"
+              hint="sponsored"
             />
             <Hud
               label="Aimed at Mars"

@@ -21,7 +21,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "FREE. We pay. Send your message to Mars on Dogecoin. No wallet.",
+          "Humanity's first guestbook. Written on Dogecoin. Aimed at Mars.",
       },
       { name: "apple-mobile-web-app-title", content: APP_NAME },
       { name: "theme-color", content: "#08070b" },
@@ -30,7 +30,7 @@ export const Route = createRootRoute({
       {
         property: "og:description",
         content:
-          "FREE. We pay. Send your message to Mars on Dogecoin. No wallet.",
+          "Humanity's first guestbook. Written on Dogecoin. Aimed at Mars.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `https://${CANONICAL_HOST}/` },
