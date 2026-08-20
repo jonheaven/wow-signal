@@ -137,11 +137,18 @@ export async function signIn(
     return;
   }
 
-  const { data, error } = await authClient.signIn.oauth2({
-    providerId,
-    callbackURL,
-    errorCallbackURL,
-  });
+  const { data, error } =
+    providerId === "google" || providerId === "twitter"
+      ? await authClient.signIn.social({
+          provider: providerId,
+          callbackURL,
+          errorCallbackURL,
+        })
+      : await authClient.signIn.oauth2({
+          providerId,
+          callbackURL,
+          errorCallbackURL,
+        });
   if (error) throw new Error(error.message ?? "Sign-in failed");
   if (data?.url) window.location.href = data.url;
 }

@@ -44,6 +44,11 @@ import {
   PREVIEW_CLIENT_ID,
   PREVIEW_CLIENT_SECRET,
 } from "./preview";
+import {
+  googleCredentials,
+  grokPreviewSafe,
+  twitterCredentials,
+} from "./native";
 
 // Kick (and share) PGLite bootstrap as soon as the auth server module loads.
 void ensureDbReady();
@@ -76,12 +81,26 @@ const authDisabled = env("VITE_AUTH_ENABLED") === "false";
 // otherwise fall back to the shared live-preview client, which the broker accepts
 // for any `*.grok-sandbox.com` callback (see `./preview`).
 const grokIssuer = env("GROK_AUTH_ISSUER") ?? GROK_ISSUER_DEFAULT;
-const grokClientId = env("GROK_AUTH_CLIENT_ID") ?? PREVIEW_CLIENT_ID;
-const grokClientSecret = env("GROK_AUTH_CLIENT_SECRET") ?? PREVIEW_CLIENT_SECRET;
+const explicitBaseURL = env("BETTER_AUTH_URL");
+const previewOk = grokPreviewSafe(explicitBaseURL);
+const injectedGrokId = env("GROK_AUTH_CLIENT_ID");
+const injectedGrokSecret = env("GROK_AUTH_CLIENT_SECRET");
+const grokClientId =
+  injectedGrokId && injectedGrokId !== PREVIEW_CLIENT_ID
+    ? injectedGrokId
+    : previewOk
+      ? (injectedGrokId ?? PREVIEW_CLIENT_ID)
+      : undefined;
+const grokClientSecret = grokClientId
+  ? injectedGrokSecret ?? (previewOk ? PREVIEW_CLIENT_SECRET : undefined)
+  : undefined;
+const google = googleCredentials();
+const twitter = twitterCredentials();
 
 /** True when federated sign-in is active (real auth is enforced). */
 export const authConfigured =
-  !authDisabled && Boolean(grokClientId && grokClientSecret);
+  !authDisabled &&
+  Boolean((grokClientId && grokClientSecret) || google || twitter);
 
 // This app's own Better Auth origin. When deployed the deployer injects the
 // public URL. In the sandbox live preview there's no fixed URL (each preview gets
@@ -89,34 +108,23 @@ export const authConfigured =
 // it derives the origin per-request from the (proxied) host, validated against the
 // preview allowlist, which makes the OAuth `redirect_uri` the concrete preview URL
 // the broker's preview client accepts.
-const explicitBaseURL = env("BETTER_AUTH_URL");
 // Explicit `string[]` (not a readonly tuple) — Better Auth's DynamicBaseURLConfig
 // requires a mutable `allowedHosts: string[]`.
-const previewAllowedHosts: string[] = [...PREVIEW_ALLOWED_HOSTS];
-// Local `npm run dev` (port 8080 contract) plus `dogenals launch` on :3083.
-// Browsers may send Origin as any of these for the same server — trusting only
-// `localhost` rejects `127.0.0.1` and breaks email/password with "Invalid origin".
+const previewAllowedHosts: string[] = [...PREVIEW_ALLOWED_HOSTS, "wow.dogenals.com"];
+// Local `npm run dev` (port 8080 contract). Browsers may send Origin as any of
+// these for the same server — trusting only `localhost` rejects `127.0.0.1` and
+// breaks email/password with "Invalid origin".
 const LOCAL_DEV_ORIGINS: string[] = [
   "http://localhost:8080",
   "http://127.0.0.1:8080",
   "http://[::1]:8080",
-  "http://localhost:3083",
-  "http://127.0.0.1:3083",
-  "http://[::1]:3083",
-  "https://wow.dogenals.com",
 ];
 const baseURL = explicitBaseURL ?? {
   // Include loopback hosts so dynamic baseURL resolves for local email/password
-  // (not only the preview wildcard). wow.dogenals.com is the tunnel origin.
-  allowedHosts: [
-    ...previewAllowedHosts,
-    "localhost",
-    "127.0.0.1",
-    "[::1]",
-    "wow.dogenals.com",
-  ],
+  // (not only the preview wildcard).
+  allowedHosts: [...previewAllowedHosts, "localhost", "127.0.0.1", "[::1]"],
   // `auto` → trust both http:// and https:// expansions of allowedHosts
-  // (preview + tunnel are https; local dev is http).
+  // (preview is https; local dev is http).
   protocol: "auto" as const,
   fallback: "http://localhost:8080",
 };
@@ -128,7 +136,6 @@ const trustedOrigins: string[] = explicitBaseURL
   : [
       // Host wildcards (matched against Origin's host)
       ...previewAllowedHosts,
-      "wow.dogenals.com",
       // Full-origin wildcards (matched against Origin)
       ...previewAllowedHosts.flatMap((host) => [`https://${host}`, `http://${host}`]),
       ...LOCAL_DEV_ORIGINS,
@@ -158,12 +165,13 @@ export const SESSION_TOKEN_COOKIE = "__Host-grok-auth.session_token";
 
 // Built separately so the `betterAuth({...})` call stays easy to edit without
 // breaking brackets (models often trip on the conditional plugin spread).
-const grokOAuthPlugin = authConfigured
+const grokOAuthPlugin =
+  grokClientId && grokClientSecret
   ? genericOAuth({
       config: GROK_PROVIDERS.map(({ providerId, idp }) => ({
         providerId,
-        clientId: grokClientId as string,
-        clientSecret: grokClientSecret as string,
+        clientId: grokClientId,
+        clientSecret: grokClientSecret,
         // Prefer static endpoints over `discoveryUrl` so initiating (and
         // completing) OAuth does not wait on a broker discovery fetch.
         authorizationUrl: grokAuthorizationUrl,
@@ -202,7 +210,11 @@ export const auth = betterAuth({
     encryptOAuthTokens: true,
     accountLinking: {
       enabled: true,
-      trustedProviders: GROK_PROVIDERS.map((p) => p.providerId),
+      trustedProviders: [
+        ...GROK_PROVIDERS.map((p) => p.providerId),
+        "google",
+        "twitter",
+      ],
       // X's synthetic email is never "verified", so don't gate linking on the
       // local user's email-verified state.
       requireLocalEmailVerified: false,
@@ -217,6 +229,19 @@ export const auth = betterAuth({
 
   // Local email/password — toggled only via `./email-password` (not a plugin).
   ...(emailAndPasswordEnabled ? { emailAndPassword: { enabled: true } } : {}),
+
+  ...(google || twitter
+    ? {
+        socialProviders: {
+          ...(google
+            ? { google: { clientId: google.clientId, clientSecret: google.clientSecret } }
+            : {}),
+          ...(twitter
+            ? { twitter: { clientId: twitter.clientId, clientSecret: twitter.clientSecret } }
+            : {}),
+        },
+      }
+    : {}),
 
   // `__Host-` prefixed cookies: the browser REFUSES any same-named cookie that
   // carries a `Domain` attribute, so a sibling `*.grok.me` app cannot "toss" a

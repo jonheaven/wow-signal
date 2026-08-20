@@ -1,11 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { GROK_PROVIDERS, authEnabled, signIn } from "@/lib/auth/client";
+import { authEnabled, signIn } from "@/lib/auth/client";
+import { getSignInOptions } from "@/lib/auth/options";
 import { hasDraftMessage } from "@/lib/draft";
 import { useEffect, useState } from "react";
 
-export const Route = createFileRoute("/login")({ component: LoginPage });
+export const Route = createFileRoute("/login")({
+  loader: async () => ({
+    providers: await getSignInOptions().catch(() => []),
+  }),
+  component: LoginPage,
+});
 
 function LoginPage() {
+  const { providers } = Route.useLoaderData();
   const [draftWaiting, setDraftWaiting] = useState(false);
   useEffect(() => {
     setDraftWaiting(hasDraftMessage());
@@ -22,10 +29,8 @@ function LoginPage() {
       </p>
 
       <div className="mt-8 space-y-3">
-        {authEnabled ? (
-          GROK_PROVIDERS.slice()
-            .reverse()
-            .map((p) => (
+        {authEnabled && providers.length ? (
+          providers.map((p) => (
               <button
                 key={p.providerId}
                 type="button"
@@ -36,7 +41,10 @@ function LoginPage() {
               </button>
             ))
         ) : (
-          <p className="text-sm text-muted">Sign-in is disabled.</p>
+          <p className="text-sm text-muted">
+            Sign-in on this host needs Google and X app credentials. Preview
+            OAuth only works on grok-sandbox.com — not wow.dogenals.com.
+          </p>
         )}
       </div>
 

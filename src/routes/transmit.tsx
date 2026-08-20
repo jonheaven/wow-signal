@@ -6,7 +6,8 @@ import { Envelope } from "@/components/envelope";
 import { Postcard } from "@/components/postcard";
 import { PostageMark } from "@/components/postage";
 import { StampButton } from "@/components/stamp-button";
-import { GROK_PROVIDERS, authEnabled, signIn } from "@/lib/auth/client";
+import { authEnabled, signIn } from "@/lib/auth/client";
+import { getSignInOptions } from "@/lib/auth/options";
 import { useCurrentUserState, type AppUser } from "@/lib/auth/use-current-user";
 import { clearDraft, readDraft, saveDraft } from "@/lib/draft";
 import {
@@ -22,7 +23,10 @@ import { issueStamp } from "@/lib/stamp";
 import { STAMP_MAX_AGE_MS, STAMP_MIN_AGE_MS, STAMP_STORAGE_KEY } from "@/lib/stamp-shared";
 
 export const Route = createFileRoute("/transmit")({
-  loader: async () => ({ stamp: await issueStamp() }),
+  loader: async () => ({
+    stamp: await issueStamp(),
+    providers: await getSignInOptions().catch(() => []),
+  }),
   component: TransmitPage,
 });
 
@@ -30,6 +34,7 @@ function TransmitPage() {
   const { user, isPending } = useCurrentUserState();
   const navigate = useNavigate();
   const issued = Route.useLoaderData().stamp;
+  const providers = Route.useLoaderData().providers;
   const [destination, setDestination] = useState<Destination>("mars");
   const [message, setMessage] = useState("");
   const [vow, setVow] = useState("");
@@ -284,10 +289,8 @@ function TransmitPage() {
                 Sign in to send. We pay the Dogecoin postage. Your draft stays
                 in this tab.
               </p>
-              {authEnabled ? (
-                GROK_PROVIDERS.slice()
-                  .reverse()
-                  .map((p) => (
+              {authEnabled && providers.length ? (
+                providers.map((p) => (
                     <button
                       key={p.providerId}
                       type="button"
@@ -295,11 +298,16 @@ function TransmitPage() {
                       onClick={() => beginSignIn(p.providerId)}
                       className="flex h-12 w-full items-center justify-center border border-border bg-surface text-[12px] uppercase tracking-[0.18em] transition-colors hover:border-gold hover:text-gold disabled:opacity-40"
                     >
-                      {p.idp === "twitter"
+                      {p.providerId === "twitter" || p.label === "X"
                         ? "Sign in with X — we pay"
                         : `Continue with ${p.label} — free`}
                     </button>
                   ))
+              ) : authEnabled ? (
+                <p className="text-xs text-muted">
+                  Sign-in on this host needs Google / X credentials. The Grok
+                  preview client cannot redirect to wow.dogenals.com.
+                </p>
               ) : (
                 <button
                   type="submit"

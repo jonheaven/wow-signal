@@ -98,7 +98,27 @@ PORT=3083 npm start
 
 ### Env
 
-See [.env.example](.env.example). Auth federates through the Grok broker (`GROK_AUTH_ISSUER`) for X / Google. `COMMAND_DOG_API_URL` (default `http://127.0.0.1:3000`) is the product backend. Grok briefing uses command.dog's `XAI_API_KEY`. `DATABASE_URL` is optional (defaults to embedded PGLite for **auth only**).
+See [.env.example](.env.example).
+
+**Production sign-in on wow.dogenals.com cannot use `grok_preview`.** That client only allows `*.grok-sandbox.com`, which is why Google returned `Invalid redirect URI` and X showed "Grok Build wants to access your account."
+
+Register two apps, then put the secrets in the launch env and rebuild:
+
+| Provider | Redirect URI (exact) |
+| --- | --- |
+| Google Cloud OAuth client | `https://wow.dogenals.com/api/auth/callback/google` |
+| X app (OAuth 2.0) | `https://wow.dogenals.com/api/auth/callback/twitter` |
+
+```
+BETTER_AUTH_URL=https://wow.dogenals.com
+BETTER_AUTH_SECRET=<random 32+ bytes>
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+TWITTER_CLIENT_ID=...
+TWITTER_CLIENT_SECRET=...
+```
+
+The consent screen will then say **your** app name, not Grok Build. `COMMAND_DOG_API_URL` is the product backend. Grok briefing uses command.dog's `XAI_API_KEY`. `DATABASE_URL` is optional (defaults to embedded PGLite for **auth only**).
 
 ## Product surface
 
