@@ -33,7 +33,7 @@ export type Transmission = {
 
 export type WowEnvelope = {
   p: "Ð:WOW";
-  op: "tx";
+  op: "send";
   to: Destination;
   msg: string;
   x: string;
@@ -50,7 +50,7 @@ export function buildEnvelope(input: {
 }): WowEnvelope {
   const env: WowEnvelope = {
     p: "Ð:WOW",
-    op: "tx",
+    op: "send",
     to: input.destination,
     msg: input.message.trim(),
     x: input.handle.startsWith("@") ? input.handle : `@${input.handle}`,

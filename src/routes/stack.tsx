@@ -144,7 +144,7 @@ export function StackPage() {
         <pre className="mt-4 overflow-x-auto border border-border bg-bg p-4 text-[11px] leading-relaxed text-paper">
 {`{
   "p": "Ð:WOW",
-  "op": "tx",
+  "op": "send",
   "to": "mars | moon | earth | humanity",
   "msg": "<unicode ≤280>",
   "x": "@handle",

@@ -32,7 +32,7 @@ This repo is the **public square**. It is not a second indexer.
 ```json
 {
   "p": "Ð:WOW",
-  "op": "tx",
+  "op": "send",
   "to": "mars",
   "msg": "If you are reading this on Mars, we made it.",
   "x": "@jontype",
