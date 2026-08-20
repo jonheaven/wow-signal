@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { Envelope } from "@/components/envelope";
+import { Postcard } from "@/components/postcard";
 import { PostageMark } from "@/components/postage";
 import { StampButton } from "@/components/stamp-button";
 import { GROK_PROVIDERS, authEnabled, signIn } from "@/lib/auth/client";
@@ -319,12 +320,16 @@ function TransmitPage() {
         </form>
       </div>
 
-      <div className="lg:pt-16">
-        <Envelope envelope={envelope} />
+      <div className="lg:pt-10">
+        <Postcard envelope={envelope} />
+        <div className="mt-3">
+          <Envelope envelope={envelope} />
+        </div>
         <p className="mt-3 text-xs text-faint">
-          Marker <span className="text-muted">dog</span> · protocol{" "}
-          <span className="text-muted">Ð:WOW</span> · identity via X / Google
-          · postage from the Dogenals treasury · dogex confirms.
+          The postcard is what lands on Dogecoin —{" "}
+          <span className="text-muted">image/svg+xml</span>. JSON in{" "}
+          <span className="text-muted">{"<metadata>"}</span> is how dogex
+          reads it. Marker <span className="text-muted">dog</span>.
         </p>
       </div>
     </div>

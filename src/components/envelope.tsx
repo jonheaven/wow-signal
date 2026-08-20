@@ -3,10 +3,10 @@ import type { WowEnvelope } from "@/lib/protocol";
 export function Envelope({ envelope }: { envelope: WowEnvelope }) {
   const json = JSON.stringify(envelope, null, 2);
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-bg">
+    <div className="overflow-hidden border border-border bg-bg">
       <div className="flex items-center justify-between border-b border-border px-3 py-2">
         <span className="text-[10px] uppercase tracking-[0.2em] text-muted">
-          Dogenals envelope · dog marker
+          Indexer JSON · in {"<metadata>"}
         </span>
         <span className="text-[10px] uppercase tracking-[0.2em] text-gold">
           p: Ð:WOW

@@ -4,7 +4,7 @@
 
 **Live:** [wow.dogenals.com](https://wow.dogenals.com)
 
-No wallet. Sign in with X or Google. Hold to stamp. The Dogenals postage pot inscribes your words on Dogecoin.
+No wallet. Sign in with X or Google. Hold to stamp. The Dogenals postage pot inscribes an SVG postcard on Dogecoin — JSON in `<metadata>` for the indexer.
 
 Consumer app for the [`Ð:WOW`](https://github.com/jonheaven/dogenals/tree/main/spec/protocols/wow) protocol. Production settles through the stack you already run:
 

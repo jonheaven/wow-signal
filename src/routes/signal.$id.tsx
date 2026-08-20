@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Radio } from "lucide-react";
 import { toast } from "sonner";
 import { Envelope } from "@/components/envelope";
+import { Postcard } from "@/components/postcard";
 import { PostageMark } from "@/components/postage";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { DEST_META, callsign } from "@/lib/protocol";
@@ -114,12 +115,14 @@ function SignalPage() {
       </div>
 
       <div>
-        <Envelope envelope={s.envelope} />
+        <Postcard envelope={s.envelope} />
+        <div className="mt-3">
+          <Envelope envelope={s.envelope} />
+        </div>
         <p className="mt-4 text-xs leading-relaxed text-faint">
-          Production: command.dog queues a sponsored mint from the Dogenals
-          treasury. Humans never sign. WatchDoge shows the mempool flash,
-          dogex indexes the confirmed Ð:WOW, explorer proves the tx. Optional
-          Ðrok patches are a paid extra — the guestbook itself stays free.
+          This SVG is the NFT. dogex reads the JSON in metadata. Production:
+          command.dog queues a sponsored mint from the postage pot. Optional
+          Ðrok patches are a paid extra — the postcard itself stays free.
         </p>
       </div>
     </div>

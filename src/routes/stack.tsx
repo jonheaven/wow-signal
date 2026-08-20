@@ -153,10 +153,10 @@ export function StackPage() {
 }`}
         </pre>
         <p className="mt-3 text-xs text-faint">
-          Marker <span className="text-muted">dog</span> · dogex indexes{" "}
-          <span className="text-muted">p</span> · treasury mints · ÐPulse
-          counts wows · identity is the social login, optionally bound to Ð𝕏
-          later.
+          Marker <span className="text-muted">dog</span> · send body is{" "}
+          <span className="text-muted">image/svg+xml</span> with this JSON in{" "}
+          <span className="text-muted">{"<metadata>"}</span> · wow ops stay
+          JSON · treasury mints · dogex indexes <span className="text-muted">p</span>.
         </p>
       </div>
     </div>
