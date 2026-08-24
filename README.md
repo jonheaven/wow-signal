@@ -19,6 +19,60 @@ Consumer app for the [`Ð:WOW`](https://github.com/jonheaven/dogenals/tree/main/
 
 This repo is the **public square**. It is not a second indexer.
 
+## Sign-in (X + Google)
+
+Identity is **Sign in with X** or **Google** — no wallet. Sessions live on this app (Better Auth at `/api/auth/*`). Production **cannot** use the baked `grok_preview` client (that only allows `*.grok-sandbox.com`).
+
+`dogenals launch` reads OAuth 2.0 client id/secret from **`command.dog/api/.env`** and injects them into this process.
+
+### Which X keys to use (2026)
+
+| You created | Use for |
+| --- | --- |
+| **OAuth 2.0 Client ID + Client Secret** (`X_CLIENT_ID`, `X_CLIENT_SECRET`) | **Sign in with X** (this app) |
+| API Key + API Secret (`X_API_KEY`, `X_API_SECRET`) | OAuth 1.0a consumer — posting as the *app*, not user login |
+| Access Token + Access Token Secret | One specific X account the *app* owns — not visitor registration |
+
+A typo like `X_ACESS_SECRET` is unused. `TWITTER_CLIENT_ID` is an alias for `X_CLIENT_ID`.
+
+**X Developer Portal:** [developer.x.com/en/portal/dashboard](https://developer.x.com/en/portal/dashboard) (same as [console.x.com](https://console.x.com)).
+
+1. Project → App → **User authentication settings**.
+2. Turn on **OAuth 2.0**. App type **Web App** (confidential client).
+3. Callback URIs (all of them):
+   - `https://wow.dogenals.com/api/auth/callback/twitter`
+   - `http://127.0.0.1:3083/api/auth/callback/twitter`
+   - `http://localhost:3083/api/auth/callback/twitter`
+4. Website URL: `https://wow.dogenals.com`
+5. Scopes: `tweet.read`, `users.read`, `offline.access` (add `user.email` if you want email).
+6. Copy **Client ID** and **Client Secret** into `command.dog/api/.env` as `X_CLIENT_ID` / `X_CLIENT_SECRET`.
+7. `dogenals reboot wow` so the process picks up env.
+
+Better Auth still names the provider `twitter`; the callback path is `/api/auth/callback/twitter`.
+
+### Google sign-in
+
+**Google Cloud Console:** [console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)
+
+1. Create or pick a GCP project.
+2. **APIs & Services → OAuth consent screen** (External is fine for a public guestbook). App name WOW SIGNAL, support email you.
+3. **Credentials → Create credentials → OAuth client ID → Web application**.
+4. Authorized JavaScript origins:
+   - `https://wow.dogenals.com`
+   - `http://127.0.0.1:3083`
+5. Authorized redirect URIs:
+   - `https://wow.dogenals.com/api/auth/callback/google`
+   - `http://127.0.0.1:3083/api/auth/callback/google`
+   - `http://localhost:3083/api/auth/callback/google`
+6. Put `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `command.dog/api/.env`.
+7. Reboot wow. The Google button stays hidden until both vars are set.
+
+### Env
+
+See [.env.example](.env.example). Also set a long `BETTER_AUTH_SECRET` so sessions survive process restart.
+
+`COMMAND_DOG_API_URL` is the product backend. Grok briefing uses command.dog's `XAI_API_KEY`. `DATABASE_URL` is optional (defaults to embedded PGLite for **auth only**).
+
 ## Product contract
 
 - Identity = X or Google. Callsign from the handle.
@@ -95,30 +149,6 @@ PORT=3083 npm start
 | `npm start` | Production preview (`vite preview`) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run build` | Production build + migrate |
-
-### Env
-
-See [.env.example](.env.example).
-
-**Production sign-in on wow.dogenals.com cannot use `grok_preview`.** That client only allows `*.grok-sandbox.com`, which is why Google returned `Invalid redirect URI` and X showed "Grok Build wants to access your account."
-
-Register two apps, then put the secrets in the launch env and rebuild:
-
-| Provider | Redirect URI (exact) |
-| --- | --- |
-| Google Cloud OAuth client | `https://wow.dogenals.com/api/auth/callback/google` |
-| X app (OAuth 2.0) | `https://wow.dogenals.com/api/auth/callback/twitter` |
-
-```
-BETTER_AUTH_URL=https://wow.dogenals.com
-BETTER_AUTH_SECRET=<random 32+ bytes>
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-TWITTER_CLIENT_ID=...
-TWITTER_CLIENT_SECRET=...
-```
-
-The consent screen will then say **your** app name, not Grok Build. `COMMAND_DOG_API_URL` is the product backend. Grok briefing uses command.dog's `XAI_API_KEY`. `DATABASE_URL` is optional (defaults to embedded PGLite for **auth only**).
 
 ## Product surface
 

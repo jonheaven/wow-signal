@@ -5,15 +5,17 @@
  * local email/password, flip the flag in `./email-password` only (see auth skill).
  *
  * The app runs its own Better Auth at `/api/auth/*`, so the session cookie stays
- * on this app's own origin. Sign-in federates to the shared **Grok auth broker**
- * (`GROK_AUTH_ISSUER`) via the `genericOAuth` plugin — the broker brokers the
- * upstream sign-in methods (Google, X, …) and holds their shared secrets; this
- * app only holds its own client id/secret and names the upstream it wants via
- * each provider's `idp` hint.
+ * on this app's own origin. Production (wow.dogenals.com) signs in with **X** and
+ * **Google** via Better Auth `socialProviders` (`X_CLIENT_ID` / `GOOGLE_CLIENT_ID`
+ * — `dogenals launch` injects these from command.dog/api/.env). The shared
+ * **Grok auth broker** (`GROK_AUTH_ISSUER`) is sandbox-only; `grok_preview` is
+ * never used when `BETTER_AUTH_URL` is wow.dogenals.com.
  *
  * Tri-mode:
- *   - Deployed: the deployer injects a per-app `GROK_AUTH_*` + `BETTER_AUTH_URL`
- *     + `DATABASE_URL`, so real federated auth is persisted in Postgres.
+ *   - wow.dogenals.com: `X_CLIENT_ID` + `X_CLIENT_SECRET` (OAuth 2.0) and optional
+ *     Google; `BETTER_AUTH_URL=https://wow.dogenals.com`.
+ *   - Deployed Grok host: the deployer injects `GROK_AUTH_*` + `BETTER_AUTH_URL`
+ *     + `DATABASE_URL`, so federated auth is persisted in Postgres.
  *   - Sandbox live preview: no injection -> falls back to the shared **preview
  *     client** (`./preview`) and derives the preview's `https://*.grok-sandbox.com`
  *     origin from the request, so real sign-in works (no demo users). Sessions
@@ -118,6 +120,10 @@ const LOCAL_DEV_ORIGINS: string[] = [
   "http://localhost:8080",
   "http://127.0.0.1:8080",
   "http://[::1]:8080",
+  "http://localhost:3083",
+  "http://127.0.0.1:3083",
+  "http://[::1]:3083",
+  "https://wow.dogenals.com",
 ];
 const baseURL = explicitBaseURL ?? {
   // Include loopback hosts so dynamic baseURL resolves for local email/password
@@ -188,6 +194,21 @@ const grokOAuthPlugin =
     })
   : null;
 
+function twitterProfileName(profile: Record<string, unknown>): string {
+  const data =
+    profile.data && typeof profile.data === "object"
+      ? (profile.data as Record<string, unknown>)
+      : profile;
+  const username = data.username ?? data.screen_name ?? data.name;
+  return String(username || "x").replace(/^@/, "");
+}
+
+if (!authDisabled) {
+  console.info(
+    `[auth] X=${twitter ? "oauth2" : "off"} Google=${google ? "oauth2" : "off"} grok-broker=${grokOAuthPlugin ? "on" : "off"}`,
+  );
+}
+
 export const auth = betterAuth({
   baseURL,
   // Deployed apps inject BETTER_AUTH_SECRET. Preview: process-stable secret on
@@ -237,7 +258,23 @@ export const auth = betterAuth({
             ? { google: { clientId: google.clientId, clientSecret: google.clientSecret } }
             : {}),
           ...(twitter
-            ? { twitter: { clientId: twitter.clientId, clientSecret: twitter.clientSecret } }
+            ? {
+                twitter: {
+                  clientId: twitter.clientId,
+                  clientSecret: twitter.clientSecret,
+                  mapProfileToUser(profile: Record<string, unknown>) {
+                    const data =
+                      profile.data && typeof profile.data === "object"
+                        ? (profile.data as Record<string, unknown>)
+                        : profile;
+                    const image = data.profile_image_url_https ?? data.profile_image_url;
+                    return {
+                      name: twitterProfileName(profile),
+                      image: image ? String(image) : undefined,
+                    };
+                  },
+                },
+              }
             : {}),
         },
       }

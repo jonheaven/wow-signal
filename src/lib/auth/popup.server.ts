@@ -17,6 +17,7 @@
  * `client.ts` (`signIn` → `openSignInPopup`).
  */
 import { auth, SESSION_TOKEN_COOKIE } from "./server";
+import { isSocialProvider } from "./providers";
 
 /** Message shape the popup posts to the opener (must match `client.ts`). */
 type PopupMessage = {
@@ -61,18 +62,19 @@ export async function handleAuthPopupRequest(request: Request): Promise<Response
 
   // Stay first-party for the callback so the session cookie lands in THIS popup.
   const back = `${url.origin}/auth/popup?done=1`;
+  const errorCallbackURL = `${back}&error=1`;
   try {
-    const apiRes = await auth.api.signInWithOAuth2({
-      body: {
-        providerId,
-        callbackURL: back,
-        errorCallbackURL: `${back}&error=1`,
-      },
-      // Forward the preview host so Better Auth derives the correct baseURL /
-      // redirect_uri for the dynamic `*.grok-sandbox.com` origin.
-      headers: request.headers,
-      asResponse: true,
-    });
+    const apiRes = isSocialProvider(providerId)
+      ? await auth.api.signInSocial({
+          body: { provider: providerId, callbackURL: back, errorCallbackURL },
+          headers: request.headers,
+          asResponse: true,
+        })
+      : await auth.api.signInWithOAuth2({
+          body: { providerId, callbackURL: back, errorCallbackURL },
+          headers: request.headers,
+          asResponse: true,
+        });
 
     if (!apiRes.ok) {
       const detail = await apiRes.text().catch(() => "");
@@ -83,10 +85,10 @@ export async function handleAuthPopupRequest(request: Request): Promise<Response
       });
     }
 
-    const body = (await apiRes.json().catch(() => null)) as {
+    const payload = (await apiRes.json().catch(() => null)) as {
       url?: string;
     } | null;
-    const location = body?.url;
+    const location = payload?.url;
     if (!location) {
       return completionResponse({
         source: "grok-auth-popup",
