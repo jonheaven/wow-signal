@@ -68,7 +68,7 @@ const FLOW = [
   },
 ];
 
-export function StackPage() {
+function StackPage() {
   return (
     <div className="space-y-14">
       <div>

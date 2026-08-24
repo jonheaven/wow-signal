@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { authEnabled, signIn } from "@/lib/auth/client";
 import { getSignInOptions } from "@/lib/auth/options";
+import { FALLBACK_X, readProviders } from "@/lib/auth/sign-in-ui";
 import { hasDraftMessage } from "@/lib/draft";
 import { useEffect, useState } from "react";
 
@@ -12,7 +14,16 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const { providers } = Route.useLoaderData();
+  const loaded = readProviders(Route.useLoaderData());
+  const optionsQuery = useQuery({
+    queryKey: ["wow-sign-in-options"],
+    queryFn: () => getSignInOptions(),
+    initialData: loaded.length ? loaded : undefined,
+    retry: 5,
+    retryDelay: 2000,
+  });
+  const providers = optionsQuery.data?.length ? optionsQuery.data : loaded;
+  const shown = providers.length ? providers : FALLBACK_X;
   const [draftWaiting, setDraftWaiting] = useState(false);
   useEffect(() => {
     setDraftWaiting(hasDraftMessage());
@@ -29,8 +40,8 @@ function LoginPage() {
       </p>
 
       <div className="mt-8 space-y-3">
-        {authEnabled && providers.length ? (
-          providers.map((p) => (
+        {authEnabled ? (
+          shown.map((p) => (
               <button
                 key={p.providerId}
                 type="button"
@@ -41,10 +52,7 @@ function LoginPage() {
               </button>
             ))
         ) : (
-          <p className="text-sm text-muted">
-            Sign-in on this host needs Google and X app credentials. Preview
-            OAuth only works on grok-sandbox.com — not wow.dogenals.com.
-          </p>
+          <p className="text-sm text-muted">Sign-in is disabled.</p>
         )}
       </div>
 

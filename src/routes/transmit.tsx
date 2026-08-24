@@ -8,6 +8,7 @@ import { PostageMark } from "@/components/postage";
 import { StampButton } from "@/components/stamp-button";
 import { authEnabled, signIn } from "@/lib/auth/client";
 import { getSignInOptions } from "@/lib/auth/options";
+import { FALLBACK_X, readProviders } from "@/lib/auth/sign-in-ui";
 import { useCurrentUserState, type AppUser } from "@/lib/auth/use-current-user";
 import { clearDraft, readDraft, saveDraft } from "@/lib/draft";
 import {
@@ -33,8 +34,20 @@ export const Route = createFileRoute("/transmit")({
 function TransmitPage() {
   const { user, isPending } = useCurrentUserState();
   const navigate = useNavigate();
-  const issued = Route.useLoaderData().stamp;
-  const providers = Route.useLoaderData().providers;
+  const loaderData = Route.useLoaderData();
+  const issued = loaderData?.stamp;
+  const loadedProviders = readProviders(loaderData);
+  const optionsQuery = useQuery({
+    queryKey: ["wow-sign-in-options"],
+    queryFn: () => getSignInOptions(),
+    initialData: loadedProviders.length ? loadedProviders : undefined,
+    retry: 5,
+    retryDelay: 2000,
+  });
+  const resolvedProviders = optionsQuery.data?.length
+    ? optionsQuery.data
+    : loadedProviders;
+  const providers = resolvedProviders.length ? resolvedProviders : FALLBACK_X;
   const [destination, setDestination] = useState<Destination>("mars");
   const [message, setMessage] = useState("");
   const [vow, setVow] = useState("");
@@ -57,12 +70,12 @@ function TransmitPage() {
       const age = stored ? Date.now() - Number(stored.split(".")[0]) : 0;
       if (stored && stored.split(".").length === 3 && age > 0 && age < STAMP_MAX_AGE_MS) {
         setStamp(stored);
-      } else {
+      } else if (issued) {
         window.sessionStorage.setItem(STAMP_STORAGE_KEY, issued);
         setStamp(issued);
       }
     } catch {
-      setStamp(issued);
+      if (issued) setStamp(issued);
     }
     setHydrated(true);
   }, [issued]);
@@ -130,7 +143,7 @@ function TransmitPage() {
 
   useEffect(() => {
     if (!hydrated || !user || busy || !pendingQueue.current) return;
-    if (!message.trim()) return;
+    if (!message.trim() || !stamp) return;
     const age = Date.now() - Number(stamp.split(".")[0]);
     const wait = Math.max(0, STAMP_MIN_AGE_MS + 50 - (Number.isFinite(age) ? age : 0));
     const t = window.setTimeout(() => {
