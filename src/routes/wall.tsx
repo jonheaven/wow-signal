@@ -8,9 +8,7 @@ import { listTransmissions } from "@/lib/signals";
 
 export const Route = createFileRoute("/wall")({
   loader: async () => {
-    const list = await listTransmissions({ data: { limit: 60 } }).catch(
-      () => [],
-    );
+    const list = await listTransmissions({ data: { limit: 60 } });
     return { list };
   },
   component: WallPage,
@@ -64,14 +62,17 @@ function WallPage() {
               <div key={i} className="h-28 animate-pulse rounded-lg bg-surface-2" />
             ))
           : null}
-        {q.data?.length === 0 ? (
+        {q.isError ? (
+          <p className="border border-danger/40 bg-danger/10 px-4 py-8 text-sm text-danger">
+            Indexer unreachable — this is not an empty guestbook. Wait for live APIs to recover.
+          </p>
+        ) : q.data?.length === 0 ? (
           <p className="border border-border px-4 py-8 text-sm text-muted">
             No transmissions on this heading yet.
           </p>
-        ) : null}
-        {q.data?.map((s) => (
-          <SignalCard key={s.id} signal={s} />
-        ))}
+        ) : (
+          q.data?.map((s) => <SignalCard key={s.id} signal={s} />)
+        )}
       </div>
     </div>
   );

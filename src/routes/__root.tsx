@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { AuthProvider } from "@/lib/auth/provider";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { Shell } from "@/components/shell";
+import { ApiDownNotice } from "@/components/api-down-notice";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "WOW SIGNAL";
@@ -76,6 +77,7 @@ function RootDocument() {
             <Shell>
               <Outlet />
             </Shell>
+            <ApiDownNotice />
             <Toaster
               theme="dark"
               position="bottom-right"
