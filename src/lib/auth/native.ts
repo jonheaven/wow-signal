@@ -1,5 +1,5 @@
 /**
- * Self-hosted production auth (wow.dogenals.com).
+ * Self-hosted production auth (wow.dogecoin.dog).
  *
  * The baked `grok_preview` client only allows `*.grok-sandbox.com` callbacks.
  * On a custom domain it must NEVER be used — that's the "Invalid redirect URI"

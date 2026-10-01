@@ -2,7 +2,7 @@
 
 **Earth's outbound log. Addressed to Mars. Postage paid.**
 
-**Live:** [wow.dogenals.com](https://wow.dogenals.com)
+**Live:** [wow.dogecoin.dog](https://wow.dogecoin.dog)
 
 No wallet. Sign in with X or Google. Hold to stamp. The Dogenals postage pot inscribes an SVG postcard on Dogecoin — JSON in `<metadata>` for the indexer.
 
@@ -40,10 +40,10 @@ A typo like `X_ACESS_SECRET` is unused. `TWITTER_CLIENT_ID` is an alias for `X_C
 1. Project → App → **User authentication settings**.
 2. Turn on **OAuth 2.0**. App type **Web App** (confidential client).
 3. Callback URIs (all of them):
-   - `https://wow.dogenals.com/api/auth/callback/twitter`
+   - `https://wow.dogecoin.dog/api/auth/callback/twitter`
    - `http://127.0.0.1:3083/api/auth/callback/twitter`
    - `http://localhost:3083/api/auth/callback/twitter`
-4. Website URL: `https://wow.dogenals.com`
+4. Website URL: `https://wow.dogecoin.dog`
 5. Scopes: `tweet.read`, `users.read`, `offline.access` (add `user.email` if you want email).
 6. Copy **Client ID** and **Client Secret** into `command.dog/api/.env` as `X_CLIENT_ID` / `X_CLIENT_SECRET`.
 7. `dogenals reboot wow` so the process picks up env.
@@ -58,10 +58,10 @@ Better Auth still names the provider `twitter`; the callback path is `/api/auth/
 2. **APIs & Services → OAuth consent screen** (External is fine for a public guestbook). App name WOW SIGNAL, support email you.
 3. **Credentials → Create credentials → OAuth client ID → Web application**.
 4. Authorized JavaScript origins:
-   - `https://wow.dogenals.com`
+   - `https://wow.dogecoin.dog`
    - `http://127.0.0.1:3083`
 5. Authorized redirect URIs:
-   - `https://wow.dogenals.com/api/auth/callback/google`
+   - `https://wow.dogecoin.dog/api/auth/callback/google`
    - `http://127.0.0.1:3083/api/auth/callback/google`
    - `http://localhost:3083/api/auth/callback/google`
 6. Put `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `command.dog/api/.env`.
@@ -121,7 +121,7 @@ npm run dev
 
 Dev server: `http://localhost:8080` (`npm run dev`).
 
-On the Dogenals stack, `dogenals launch` starts this app on **`:3083`**. Public **[wow.dogenals.com](https://wow.dogenals.com)** needs a Cloudflare CNAME on the **dogenals.com** zone (cert.pem cannot write that zone):
+On the Dogenals stack, `dogenals launch` starts this app on **`:3083`**. Public **[wow.dogecoin.dog](https://wow.dogecoin.dog)** needs a Cloudflare CNAME on the **dogenals.com** zone (cert.pem cannot write that zone):
 
 | Type | Name | Content | Proxy |
 | --- | --- | --- | --- |
@@ -137,7 +137,7 @@ npm run build
 PORT=3083 npm start
 ```
 
-`npm start` is `vite preview` on `PORT` (default 8080; `dogenals launch` uses 3083). Cloudflare on `wow.dogenals.com`:
+`npm start` is `vite preview` on `PORT` (default 8080; `dogenals launch` uses 3083). Cloudflare on `wow.dogecoin.dog`:
 
 1. SSL/TLS mode **Full** (tunnel origin is HTTP).
 2. **Always Use HTTPS** (SSL/TLS → Edge Certificates).

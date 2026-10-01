@@ -319,7 +319,7 @@ function TransmitPage() {
               ) : authEnabled ? (
                 <p className="text-xs text-muted">
                   Sign-in on this host needs Google / X credentials. The Grok
-                  preview client cannot redirect to wow.dogenals.com.
+                  preview client cannot redirect to wow.dogecoin.dog.
                 </p>
               ) : (
                 <button

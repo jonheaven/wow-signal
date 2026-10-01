@@ -5,15 +5,15 @@
  * local email/password, flip the flag in `./email-password` only (see auth skill).
  *
  * The app runs its own Better Auth at `/api/auth/*`, so the session cookie stays
- * on this app's own origin. Production (wow.dogenals.com) signs in with **X** and
+ * on this app's own origin. Production (wow.dogecoin.dog) signs in with **X** and
  * **Google** via Better Auth `socialProviders` (`X_CLIENT_ID` / `GOOGLE_CLIENT_ID`
  * — `dogenals launch` injects these from command.dog/api/.env). The shared
  * **Grok auth broker** (`GROK_AUTH_ISSUER`) is sandbox-only; `grok_preview` is
- * never used when `BETTER_AUTH_URL` is wow.dogenals.com.
+ * never used when `BETTER_AUTH_URL` is wow.dogecoin.dog.
  *
  * Tri-mode:
- *   - wow.dogenals.com: `X_CLIENT_ID` + `X_CLIENT_SECRET` (OAuth 2.0) and optional
- *     Google; `BETTER_AUTH_URL=https://wow.dogenals.com`.
+ *   - wow.dogecoin.dog: `X_CLIENT_ID` + `X_CLIENT_SECRET` (OAuth 2.0) and optional
+ *     Google; `BETTER_AUTH_URL=https://wow.dogecoin.dog`.
  *   - Deployed Grok host: the deployer injects `GROK_AUTH_*` + `BETTER_AUTH_URL`
  *     + `DATABASE_URL`, so federated auth is persisted in Postgres.
  *   - Sandbox live preview: no injection -> falls back to the shared **preview
@@ -112,7 +112,7 @@ export const authConfigured =
 // the broker's preview client accepts.
 // Explicit `string[]` (not a readonly tuple) — Better Auth's DynamicBaseURLConfig
 // requires a mutable `allowedHosts: string[]`.
-const previewAllowedHosts: string[] = [...PREVIEW_ALLOWED_HOSTS, "wow.dogenals.com"];
+const previewAllowedHosts: string[] = [...PREVIEW_ALLOWED_HOSTS, "wow.dogecoin.dog"];
 // Local `npm run dev` (port 8080 contract). Browsers may send Origin as any of
 // these for the same server — trusting only `localhost` rejects `127.0.0.1` and
 // breaks email/password with "Invalid origin".
@@ -123,7 +123,7 @@ const LOCAL_DEV_ORIGINS: string[] = [
   "http://localhost:3083",
   "http://127.0.0.1:3083",
   "http://[::1]:3083",
-  "https://wow.dogenals.com",
+  "https://wow.dogecoin.dog",
 ];
 const baseURL = explicitBaseURL ?? {
   // Include loopback hosts so dynamic baseURL resolves for local email/password

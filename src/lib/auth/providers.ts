@@ -1,7 +1,7 @@
 /**
  * Sign-in providers shown in the UI (X + Google).
  *
- * Production (wow.dogenals.com) uses Better Auth **social** providers with
+ * Production (wow.dogecoin.dog) uses Better Auth **social** providers with
  * OAuth 2.0 client id/secret from env (`X_CLIENT_ID` / `GOOGLE_CLIENT_ID`).
  * The Grok auth broker remains an optional fallback when `GROK_AUTH_CLIENT_ID`
  * is set (sandbox / grok-sandbox.com).

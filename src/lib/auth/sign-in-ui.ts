@@ -11,7 +11,7 @@ export function readProviders(
   return Array.isArray(data?.providers) ? data.providers : [];
 }
 
-/** X is the production default on wow.dogenals.com when the options loader 530s. */
+/** X is the production default on wow.dogecoin.dog when the options loader 530s. */
 export const FALLBACK_X: SignInButton[] = [
   { providerId: "twitter", label: "X" },
 ];
