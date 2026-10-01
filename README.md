@@ -23,7 +23,7 @@ This repo is the **public square**. It is not a second indexer.
 
 Identity is **Sign in with X** or **Google** — no wallet. Sessions live on this app (Better Auth at `/api/auth/*`). Production **cannot** use the baked `grok_preview` client (that only allows `*.grok-sandbox.com`).
 
-`dogenals launch` reads OAuth 2.0 client id/secret from **`command.dog/api/.env`** and injects them into this process.
+`dogestack launch` reads OAuth 2.0 client id/secret from **`command.dog/api/.env`** and injects them into this process.
 
 ### Which X keys to use (2026)
 
@@ -46,7 +46,7 @@ A typo like `X_ACESS_SECRET` is unused. `TWITTER_CLIENT_ID` is an alias for `X_C
 4. Website URL: `https://wow.dogecoin.dog`
 5. Scopes: `tweet.read`, `users.read`, `offline.access` (add `user.email` if you want email).
 6. Copy **Client ID** and **Client Secret** into `command.dog/api/.env` as `X_CLIENT_ID` / `X_CLIENT_SECRET`.
-7. `dogenals reboot wow` so the process picks up env.
+7. `dogestack reboot wow` so the process picks up env.
 
 Better Auth still names the provider `twitter`; the callback path is `/api/auth/callback/twitter`.
 
@@ -121,13 +121,13 @@ npm run dev
 
 Dev server: `http://localhost:8080` (`npm run dev`).
 
-On the Dogenals stack, `dogenals launch` starts this app on **`:3083`**. Public **[wow.dogecoin.dog](https://wow.dogecoin.dog)** needs a Cloudflare CNAME on the **dogenals.com** zone (cert.pem cannot write that zone):
+`dogestack launch` starts this app on **`:3083`**. Public **[wow.dogecoin.dog](https://wow.dogecoin.dog)** needs a Cloudflare CNAME on the **dogecoin.dog** zone (cert.pem cannot write that zone; do not CNAME the apex):
 
 | Type | Name | Content | Proxy |
 | --- | --- | --- | --- |
 | CNAME | `wow` | `33c26e6b-d4d0-413d-a1ce-164b514538cd.cfargotunnel.com` | Proxied |
 
-Skip the app with `DOGENALS_SKIP_WOW=1`. Local: `http://127.0.0.1:3083`.
+Skip the app with `DOGESTACK_SKIP_WOW=1`. Local: `http://127.0.0.1:3083`.
 
 **Do not serve `vite dev` on the public host.** After `git pull`:
 
@@ -137,7 +137,7 @@ npm run build
 PORT=3083 npm start
 ```
 
-`npm start` is `vite preview` on `PORT` (default 8080; `dogenals launch` uses 3083). Cloudflare on `wow.dogecoin.dog`:
+`npm start` is `vite preview` on `PORT` (default 8080; `dogestack launch` uses 3083). Cloudflare on `wow.dogecoin.dog`:
 
 1. SSL/TLS mode **Full** (tunnel origin is HTTP).
 2. **Always Use HTTPS** (SSL/TLS → Edge Certificates).
