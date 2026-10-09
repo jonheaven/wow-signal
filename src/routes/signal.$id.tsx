@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Radio } from "lucide-react";
+import { Copy, Radio } from "lucide-react";
 import { toast } from "sonner";
 import { Envelope } from "@/components/envelope";
 import { Postcard } from "@/components/postcard";
@@ -96,6 +96,26 @@ function SignalPage() {
               {brief.isPending ? "Asking Grok…" : "Mission briefing"}
             </button>
           ) : null}
+          <button
+            type="button"
+            className="inline-flex h-11 items-center gap-2 border border-border px-4 text-[12px] uppercase tracking-[0.16em] hover:border-gold hover:text-gold"
+            onClick={() => {
+              const url = `https://wow.dogecoin.dog/signal/${s.id}`;
+              void navigator.clipboard.writeText(url);
+              toast.success("Postcard link copied");
+            }}
+          >
+            <Copy className="size-4" />
+            Copy link
+          </button>
+          <a
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${s.message}\nhttps://wow.dogecoin.dog/signal/${s.id}`)}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex h-11 items-center border border-border px-4 text-[12px] uppercase tracking-[0.16em] hover:border-gold hover:text-gold"
+          >
+            Share on 𝕏
+          </a>
           <Link
             to="/transmit"
             className="inline-flex h-11 items-center bg-gold px-4 text-[12px] uppercase tracking-[0.16em] text-bg hover:bg-gold-hot"
