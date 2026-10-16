@@ -11,7 +11,7 @@ const LAYERS = [
   {
     name: "dogenals",
     job: "Protocol. Ð:WOW envelope, ÐPulse, ÐVow, Ð𝕏, marker dog.",
-    host: "dogenals.com / spec",
+    host: "dogex.dog / spec",
   },
   {
     name: "command.dog",
