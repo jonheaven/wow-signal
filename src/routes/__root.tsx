@@ -9,7 +9,7 @@ import { ApiDownNotice } from "@/components/api-down-notice";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "WOW SIGNAL";
-const CANONICAL_HOST = "wow.dogecoin.dog";
+const CANONICAL_HOST = "wow.doginals.lol";
 const host = import.meta.env.VITE_PUBLIC_HOSTNAME || CANONICAL_HOST;
 const ogImage = `https://${host}/og.jpg`;
 

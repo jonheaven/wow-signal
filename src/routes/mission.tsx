@@ -87,7 +87,7 @@ function MissionPage() {
             </div>
             <p className="mt-3 text-[11px] leading-relaxed text-faint">
               Preview address — do not send real DOGE here. Live treasury
-              ships with wow.dogecoin.dog.
+              ships with wow.doginals.lol.
             </p>
           </div>
 

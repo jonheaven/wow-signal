@@ -6,7 +6,7 @@ const LAYERS = [
   {
     name: "WOW SIGNAL",
     job: "Public square. Humans compose. No wallet in the path.",
-    host: "wow.dogecoin.dog",
+    host: "wow.doginals.lol",
   },
   {
     name: "dogenals",

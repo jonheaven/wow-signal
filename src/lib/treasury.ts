@@ -32,7 +32,7 @@ export const FEE = {
 } as const;
 
 export const TREASURY = {
-  /** Preview address. Swap for the live Dogenals treasury on wow.dogecoin.dog. */
+  /** Preview address. Swap for the live Dogenals treasury on wow.doginals.lol. */
   address: "DWowSignalFundPreviewDoNotSend1",
   network: "Dogecoin",
   label: "Dogenals treasury",

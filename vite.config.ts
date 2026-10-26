@@ -125,7 +125,7 @@ function authPopupPlugin(): Plugin {
 
 // Default `0.0.0.0:8080` is the Grok live-preview contract.
 // `dogestack launch` sets PORT=3083 (dogex already owns :8080) and
-// DOGENALS_TUNNEL_HMR=1 so wow.dogecoin.dog HMR works through the tunnel.
+// DOGENALS_TUNNEL_HMR=1 so wow.doginals.lol HMR works through the tunnel.
 const port = Number(process.env.PORT || 8080);
 const tunnelHmr = process.env.DOGENALS_TUNNEL_HMR === "1";
 
@@ -134,14 +134,14 @@ export default defineConfig(({ command }) => ({
     host: "0.0.0.0",
     port,
     strictPort: true,
-    allowedHosts: ["wow.dogecoin.dog", ".dogecoin.dog", "localhost"],
+    allowedHosts: ["wow.doginals.lol", ".doginals.lol", "localhost"],
     hmr: tunnelHmr ? { protocol: "wss", clientPort: 443 } : true,
   },
   preview: {
     host: "0.0.0.0",
     port,
     strictPort: true,
-    allowedHosts: ["wow.dogecoin.dog", ".dogecoin.dog", "localhost"],
+    allowedHosts: ["wow.doginals.lol", ".doginals.lol", "localhost"],
   },
   resolve: { tsconfigPaths: true },
   plugins: [

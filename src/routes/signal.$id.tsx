@@ -100,7 +100,7 @@ function SignalPage() {
             type="button"
             className="inline-flex h-11 items-center gap-2 border border-border px-4 text-[12px] uppercase tracking-[0.16em] hover:border-gold hover:text-gold"
             onClick={() => {
-              const url = `https://wow.dogecoin.dog/signal/${s.id}`;
+              const url = `https://wow.doginals.lol/signal/${s.id}`;
               void navigator.clipboard.writeText(url);
               toast.success("Postcard link copied");
             }}
@@ -109,7 +109,7 @@ function SignalPage() {
             Copy link
           </button>
           <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${s.message}\nhttps://wow.dogecoin.dog/signal/${s.id}`)}`}
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`${s.message}\nhttps://wow.doginals.lol/signal/${s.id}`)}`}
             target="_blank"
             rel="noreferrer"
             className="inline-flex h-11 items-center border border-border px-4 text-[12px] uppercase tracking-[0.16em] hover:border-gold hover:text-gold"
