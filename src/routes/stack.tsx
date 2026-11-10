@@ -9,7 +9,7 @@ const LAYERS = [
     host: "wow.doginals.lol",
   },
   {
-    name: "dogenals",
+    name: "doginals",
     job: "Protocol. Ð:WOW envelope, ÐPulse, ÐVow, Ð𝕏, marker dog.",
     host: "dogex.dog / spec",
   },
@@ -127,7 +127,7 @@ function StackPage() {
             Donations refill the treasury. Power users can later attach Dojak
             to buy extra daily signals or a Ðrok mission patch. Default path
             stays free. One transmission per Earth day keeps the hot wallet
-            honest. The chain still earns history. Dogenals still earns the
+            honest. The chain still earns history. Doginals still earns the
             cultural moment.
           </p>
         </div>

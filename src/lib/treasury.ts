@@ -35,7 +35,7 @@ export const TREASURY = {
   /** Preview address. Swap for the live Dogenals treasury on wow.doginals.lol. */
   address: "DWowSignalFundPreviewDoNotSend1",
   network: "Dogecoin",
-  label: "Dogenals treasury",
+  label: "Doginals treasury",
   postageDoge: FEE.quietDoge,
   quotaHours: 24,
   dailyPerHuman: 1,

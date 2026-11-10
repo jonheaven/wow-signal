@@ -7,7 +7,7 @@
  * The app runs its own Better Auth at `/api/auth/*`, so the session cookie stays
  * on this app's own origin. Production (wow.doginals.lol) signs in with **X** and
  * **Google** via Better Auth `socialProviders` (`X_CLIENT_ID` / `GOOGLE_CLIENT_ID`
- * — `dogenals launch` injects these from command.dog/api/.env). The shared
+ * — `doginals launch` injects these from command.dog/api/.env). The shared
  * **Grok auth broker** (`GROK_AUTH_ISSUER`) is sandbox-only; `grok_preview` is
  * never used when `BETTER_AUTH_URL` is wow.doginals.lol.
  *

@@ -4,13 +4,13 @@
 
 **Live:** [wow.doginals.lol](https://wow.doginals.lol)
 
-No wallet. Sign in with X or Google. Hold to stamp. The Dogenals postage pot inscribes an SVG postcard on Dogecoin — JSON in `<metadata>` for the indexer.
+No wallet. Sign in with X or Google. Hold to stamp. The Doginals postage pot inscribes an SVG postcard on Dogecoin — JSON in `<metadata>` for the indexer.
 
 Consumer app for the [`Ð:WOW`](https://github.com/jonheaven/dogenals/tree/main/spec/protocols/wow) protocol. Production settles through the stack you already run:
 
 | Layer | Job |
 | --- | --- |
-| [dogenals](https://github.com/jonheaven/dogenals) | Protocol standard. Envelope, marker `dog`. |
+| [doginals](https://github.com/jonheaven/dogenals) | Protocol standard. Envelope, marker `dog`. |
 | [command.dog](https://github.com/jonheaven/command.dog) | Sponsored inscribe jobs, Grok briefing, WatchDoge WS. |
 | Treasury Dojak | Operator wallet signs postage. Users never hold a key. |
 | [dogex](https://github.com/jonheaven/dogex) | Index confirmed `p: "Ð:WOW"`. Proofs. Broadcast. |
@@ -161,4 +161,4 @@ PORT=3083 npm start
 
 ## License
 
-MIT. Same as the rest of the Dogenals stack.
+MIT. Same as the rest of the Doginals stack.
